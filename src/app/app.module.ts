@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -27,10 +27,18 @@ import { MemberListResolve } from './_resolvers/member-list.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolve } from './_resolvers/member-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 export function getToken() {
  return localStorage.getItem('token');
+}
+export class CustomHammerConfig extends HammerGestureConfig  {
+  overrides = {
+      pinch: { enable: false },
+      rotate: { enable: false }
+  };
 }
 @NgModule({
   declarations: [
@@ -43,7 +51,8 @@ export function getToken() {
     MessagesComponent,
     MemberCardComponent,
     MemberDetailComponent,
-    MemberEditComponent
+    MemberEditComponent,
+    PhotoEditorComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +62,7 @@ export function getToken() {
     TabsModule.forRoot(),
     RouterModule.forRoot(appRoutes),
     NgxGalleryModule,
+    NgxSpinnerModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,
@@ -70,7 +80,8 @@ export function getToken() {
     MemberDetailResolve,
     MemberListResolve,
     MemberEditResolve,
-    PreventUnsavedChanges
+    PreventUnsavedChanges,
+    { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
   ],
   bootstrap: [AppComponent],
 })

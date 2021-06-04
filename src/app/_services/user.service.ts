@@ -24,7 +24,6 @@ getUser(id): Observable<User> {
 }
 
 updateUser(id: number, user: User) {
-  console.log('user is' + user);
   return this.Http.put(this.baseUrl + 'users/' + id, user);
 }
 
