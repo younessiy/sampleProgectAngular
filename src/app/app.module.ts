@@ -1,6 +1,6 @@
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { NgModule, Injectable } from '@angular/core';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
@@ -29,11 +29,13 @@ import { MemberEditResolve } from './_resolvers/member-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 
 
 export function getToken() {
  return localStorage.getItem('token');
 }
+@Injectable()
 export class CustomHammerConfig extends HammerGestureConfig  {
   overrides = {
       pinch: { enable: false },
@@ -81,7 +83,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
     MemberListResolve,
     MemberEditResolve,
     PreventUnsavedChanges,
-    { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
+    { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
 })
