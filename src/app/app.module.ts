@@ -29,7 +29,6 @@ import { MemberEditResolve } from './_resolvers/member-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 
 
 export function getToken() {
@@ -64,7 +63,6 @@ export class CustomHammerConfig extends HammerGestureConfig  {
     TabsModule.forRoot(),
     RouterModule.forRoot(appRoutes),
     NgxGalleryModule,
-    NgxSpinnerModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,
@@ -84,7 +82,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
     MemberEditResolve,
     PreventUnsavedChanges,
     { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },
-    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }
+
   ],
   bootstrap: [AppComponent],
 })
