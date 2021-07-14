@@ -1,46 +1,46 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Member } from 'src/app/_models/member';
 import { User } from 'src/app/_models/user';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { AuthService } from 'src/app/_services/auth.service';
-import { UserService } from 'src/app/_services/user.service';
+import { AccountService } from 'src/app/_services/account.service';
+import { MembersService } from 'src/app/_services/members.service';
+import { take } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-member-edit',
   templateUrl: './member-edit.component.html',
-  styleUrls: ['./member-edit.component.css'],
+  styleUrls: ['./member-edit.component.css']
 })
 export class MemberEditComponent implements OnInit {
-  @ViewChild('editForm', { static: true }) editForm: NgForm;
+  @ViewChild('editForm') editForm: NgForm;
+  member: Member;
   user: User;
-  @HostListener('window:beforeunload', ['$event'])
-  unloadNotification($event: any) {
+  @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
     if (this.editForm.dirty) {
       $event.returnValue = true;
     }
   }
 
-  constructor(
-    private route: ActivatedRoute,
-    private alertify: AlertifyService,
-    private userService: UserService,
-    private authService: AuthService
-  ) {}
-
-  ngOnInit() {
-    this.route.data.subscribe((data) => {
-      this.user = data.user;
-    });
+  constructor(private accountService: AccountService, private memberService: MembersService, 
+    private toastr: ToastrService) { 
+      this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
   }
-  updateUser() {
-    this.userService.updateUser(this.authService.decodedToken.nameid, this.user).subscribe((next) => {
-          this.alertify.success('Profile update successfully ');
-          this.editForm.reset(this.user);
-        },
-        (error) => {
-          this.alertify.error(error);
-        }
-      );
+
+  ngOnInit(): void {
+    this.loadMember();
+  }
+
+  loadMember() {
+    this.memberService.getMember(this.user.username).subscribe(member => {
+      this.member = member;
+    })
+  }
+
+  updateMember() {
+    this.memberService.updateMember(this.member).subscribe(() => {
+      this.toastr.success('Profile updated successfully');
+      this.editForm.reset(this.member);
+    })
   }
 }

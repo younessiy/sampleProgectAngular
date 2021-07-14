@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
@@ -22,6 +21,6 @@ export class LoadingInterceptor implements HttpInterceptor {
       finalize(() => {
         this.busyService.idle();
       })
-    );
+    )
   }
 }

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../_models/user';
-import { UserService } from '../../_services/user.service';
-import { AlertifyService } from '../../_services/alertify.service';
-import { ActivatedRoute } from '@angular/router';
+import { Member } from 'src/app/_models/member';
+import { MembersService } from 'src/app/_services/members.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-member-list',
@@ -10,20 +9,12 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./member-list.component.css']
 })
 export class MemberListComponent implements OnInit {
-   users: User[];
-  constructor(private userService: UserService, private alertify: AlertifyService, private route: ActivatedRoute) { }
+  members$: Observable<Member[]>;
 
-  ngOnInit() {
-    this.route.data.subscribe(data => {
-      this.users = data.users;
-    });
+  constructor(private memberService: MembersService) { }
+
+  ngOnInit(): void {
+    this.members$ = this.memberService.getMembers();
   }
 
-  // loadUsers() {
-  //   this.userService.getUsers().subscribe((users: User[]) => {
-  //     this.users = users;
-  //   }, error => {
-  //       this.alertify.error(error);
-  //   });
-  // }
 }
