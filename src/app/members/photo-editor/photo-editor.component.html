@@ -36,7 +36,10 @@
         <input type="file" ng2FileSelect [uploader]="uploader" multiple  /><br/>
 
         Single
-        <input type="file" ng2FileSelect [uploader]="uploader" />
+        <div>
+        <input  type="file" ng2FileSelect [uploader]="uploader" />
+        
+        
     </div>
 
     <div class="col-md-9" style="margin-bottom: 40px" *ngIf="uploader?.queue?.length">
@@ -62,7 +65,7 @@
         <div>
             <div>
                 Queue progress:
-                <div class="progress" style="">
+                <div class="progress" >
                     <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
                 </div>
             </div>
